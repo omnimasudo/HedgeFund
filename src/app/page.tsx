@@ -643,14 +643,14 @@ export default function LandingPage() {
 
               {/* Q4 2026 */}
               <div className="relative">
-                <div className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 rounded-3xl p-8 h-full hover:shadow-xl hover:shadow-purple-500/10 transition-all group">
+                <div className="bg-gradient-to-br from-cyan-50 to-teal-50 border border-cyan-200 rounded-3xl p-8 h-full hover:shadow-xl hover:shadow-cyan-500/10 transition-all group">
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 bg-purple-500 rounded-2xl flex items-center justify-center shadow-lg">
+                    <div className="w-12 h-12 bg-cyan-500 rounded-2xl flex items-center justify-center shadow-lg">
                       <span className="text-white font-bold text-xl">Q4</span>
                     </div>
                     <div>
                       <h3 className="font-bold text-lg text-neutral-900">2026</h3>
-                      <p className="text-sm text-purple-600 font-semibold">Platform Maturity</p>
+                      <p className="text-sm text-cyan-600 font-semibold">Platform Maturity</p>
                     </div>
                   </div>
 
@@ -658,23 +658,23 @@ export default function LandingPage() {
 
                   <ul className="space-y-3 text-sm text-neutral-600">
                     <li className="flex items-start gap-2">
-                      <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full mt-2 flex-shrink-0"></div>
                       Personalized AI behavior (risk preference, style)
                     </li>
                     <li className="flex items-start gap-2">
-                      <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full mt-2 flex-shrink-0"></div>
                       Real-time alerts for significant market changes
                     </li>
                     <li className="flex items-start gap-2">
-                      <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full mt-2 flex-shrink-0"></div>
                       Expand asset coverage (crypto / additional markets)
                     </li>
                     <li className="flex items-start gap-2">
-                      <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full mt-2 flex-shrink-0"></div>
                       Introduce API access for advanced users
                     </li>
                     <li className="flex items-start gap-2">
-                      <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full mt-2 flex-shrink-0"></div>
                       Launch initial monetization (Pro features)
                     </li>
                   </ul>
