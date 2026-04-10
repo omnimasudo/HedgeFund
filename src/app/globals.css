@@ -140,9 +140,17 @@ body {
   animation: fade-in-left 0.8s ease-out forwards;
 }
 
-.animate-fade-in-right {
-  opacity: 0;
-  animation: fade-in-right 0.8s ease-out forwards;
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 20s linear infinite;
 }
 
 /* Scroll-triggered animation */

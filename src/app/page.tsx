@@ -19,6 +19,7 @@ import {
   Globe,
   Twitter
 } from "lucide-react";
+import { SiApachespark, SiOpenai } from "react-icons/si";
 
 export default function LandingPage() {
   const dataProviders = [
@@ -180,13 +181,15 @@ export default function LandingPage() {
             <p className="text-center text-xs font-bold uppercase tracking-widest text-neutral-400 mb-8">
               Aggregating Market Data via Secure APIs
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16 opacity-90 hover:opacity-100 transition-opacity duration-500 animate-pulse">
-              {dataProviders.map((provider, index) => (
-                <div key={index} className="flex items-center gap-2 text-neutral-500 grayscale hover:grayscale-0 hover:text-emerald-600 transition-all cursor-default animate-bounce" style={{ animationDelay: `${index * 0.2}s` }}>
-                  <provider.icon className="w-6 h-6" />
-                  <span className="font-bold text-lg tracking-tight">{provider.name}</span>
-                </div>
-              ))}
+            <div className="overflow-hidden">
+              <div className="flex items-center gap-8 md:gap-16 opacity-90 hover:opacity-100 transition-opacity duration-500 animate-scroll">
+                {[...dataProviders, ...dataProviders].map((provider, index) => (
+                  <div key={`${index}-${provider.name}`} className="flex items-center gap-2 text-neutral-700 grayscale hover:grayscale-0 hover:text-emerald-600 transition-all cursor-default flex-shrink-0">
+                    <provider.icon className="w-6 h-6" />
+                    <span className="font-bold text-lg tracking-tight">{provider.name}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -201,7 +204,7 @@ export default function LandingPage() {
             <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
               <div>
                 <h2 className="text-3xl md:text-4xl font-extrabold mb-3 text-neutral-900 tracking-tight flex items-center gap-3">
-                  Core Metrics <Activity className="w-6 h-6 text-emerald-500" />
+                  Core Metrics <SiApachespark className="w-6 h-6 text-emerald-500" />
                 </h2>
                 <p className="text-neutral-500 text-lg">
                   High-fidelity data parsing crafted for absolute precision.
@@ -223,7 +226,7 @@ export default function LandingPage() {
                   <Activity className="w-24 h-24" />
                 </div>
                 <div className="w-12 h-12 bg-neutral-50 rounded-2xl flex items-center justify-center mb-6 border border-neutral-100 group-hover:bg-emerald-50 transition-colors">
-                  <Zap className="w-6 h-6 text-neutral-700 group-hover:text-emerald-600" />
+                  <Cpu className="w-6 h-6 text-neutral-700 group-hover:text-emerald-600" />
                 </div>
                 <h3 className="font-[family-name:var(--font-jetbrains-mono)] text-lg font-bold text-neutral-900 mb-3">RSI Overbought Index</h3>
                 <p className="text-neutral-500 text-sm leading-relaxed">Calculates Relative Strength Index recursively to identify deep intrinsic valuation mismatches.</p>
@@ -231,7 +234,7 @@ export default function LandingPage() {
               
               <div className="p-8 border border-neutral-200 rounded-3xl bg-white hover:shadow-xl hover:shadow-emerald-500/5 hover:border-emerald-200 transition-all group">
                 <div className="w-12 h-12 bg-neutral-50 rounded-2xl flex items-center justify-center mb-6 border border-neutral-100 group-hover:bg-emerald-50 transition-colors">
-                  <Database className="w-6 h-6 text-neutral-700 group-hover:text-emerald-600" />
+                  <ShieldCheck className="w-6 h-6 text-neutral-700 group-hover:text-emerald-600" />
                 </div>
                 <h3 className="font-[family-name:var(--font-jetbrains-mono)] text-lg font-bold text-neutral-900 mb-3">P/E Ratio Modeler</h3>
                 <p className="text-neutral-500 text-sm leading-relaxed">Multi-vector analysis comparing Price-to-Earnings against current macroeconomic sector conditions.</p>
@@ -252,7 +255,7 @@ export default function LandingPage() {
               {/* Left Content */}
               <div className="lg:w-1/2">
                 <span className="text-emerald-600 font-bold uppercase tracking-widest text-xs mb-4 flex items-center gap-2">
-                  <Users className="w-4 h-4" /> Advanced Analysis
+                  <SiOpenai className="w-4 h-4" /> Advanced Analysis
                 </span>
                 <h2 className="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight text-neutral-900 leading-[1.1]">
                   Multi-Agent <br/>
