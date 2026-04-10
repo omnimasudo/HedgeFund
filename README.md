@@ -29,9 +29,9 @@ This system employs several agents working together:
 18. Risk Manager - Calculates risk metrics and sets position limits
 19. Portfolio Manager - Makes final trading decisions and generates orders
 
+
 <img width="1042" alt="Screenshot 2025-03-22 at 6 19 07 PM" src="https://github.com/user-attachments/assets/cbae3dcf-b571-490d-b0ad-3f0f035ac0d4" />
 
-Note: the system does not actually make any trades.
 
 [![Twitter Follow](https://img.shields.io/twitter/follow/wandaihedgefund?style=social)](https://x.com/wandaihedgefund)
 
