@@ -125,18 +125,48 @@ export function StockAnalyzer({ persona, apiKey }: StockAnalyzerProps) {
           {/* Loading State */}
           {isLoading && (
             <div className="mt-8 space-y-6">
-              <div className="flex items-center gap-3 text-sm font-bold text-emerald-600 font-[family-name:var(--font-jetbrains-mono)] animate-pulse">
-                <span>&gt; Initiating neural swarm on {ticker}...</span>
+              <div className="bg-neutral-50 border border-neutral-200 rounded-xl p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-bold text-emerald-700 font-[family-name:var(--font-jetbrains-mono)] uppercase tracking-wider">
+                    Processing {ticker} Analysis
+                  </span>
+                </div>
+                <div className="space-y-3 text-xs font-[family-name:var(--font-jetbrains-mono)] text-neutral-600">
+                  <div className="flex items-center gap-2 animate-fade-in" style={{ animationDelay: '0s' }}>
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+                    <span>Fetching real-time market data from Bloomberg API...</span>
+                  </div>
+                  <div className="flex items-center gap-2 animate-fade-in" style={{ animationDelay: '0.5s' }}>
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <span>Analyzing technical indicators and price patterns...</span>
+                  </div>
+                  <div className="flex items-center gap-2 animate-fade-in" style={{ animationDelay: '1s' }}>
+                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                    <span>Running AI sentiment analysis on news feeds...</span>
+                  </div>
+                  <div className="flex items-center gap-2 animate-fade-in" style={{ animationDelay: '1.5s' }}>
+                    <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '0.6s' }}></div>
+                    <span>Calculating risk metrics and portfolio impact...</span>
+                  </div>
+                  <div className="flex items-center gap-2 animate-fade-in" style={{ animationDelay: '2s' }}>
+                    <div className="w-2 h-2 bg-red-500 rounded-full animate-bounce" style={{ animationDelay: '0.8s' }}></div>
+                    <span>Generating investment recommendation...</span>
+                  </div>
+                </div>
+                <div className="mt-4 w-full bg-neutral-200 rounded-full h-2">
+                  <div className="bg-emerald-500 h-2 rounded-full animate-pulse" style={{ width: '60%' }}></div>
+                </div>
               </div>
               <div className="grid grid-cols-3 gap-4">
-                <Skeleton className="h-16 rounded-xl bg-neutral-100" />
-                <Skeleton className="h-16 rounded-xl bg-neutral-100" />
-                <Skeleton className="h-16 rounded-xl bg-neutral-100" />
+                <Skeleton className="h-16 rounded-xl bg-neutral-100 animate-pulse" />
+                <Skeleton className="h-16 rounded-xl bg-neutral-100 animate-pulse" style={{ animationDelay: '0.2s' }} />
+                <Skeleton className="h-16 rounded-xl bg-neutral-100 animate-pulse" style={{ animationDelay: '0.4s' }} />
               </div>
-              <Skeleton className="h-[350px] rounded-2xl bg-neutral-100" />
+              <Skeleton className="h-[350px] rounded-2xl bg-neutral-100 animate-pulse" />
               <div className="grid grid-cols-2 gap-4">
-                <Skeleton className="h-48 rounded-xl bg-neutral-100" />
-                <Skeleton className="h-48 rounded-xl bg-neutral-100" />
+                <Skeleton className="h-48 rounded-xl bg-neutral-100 animate-pulse" style={{ animationDelay: '0.6s' }} />
+                <Skeleton className="h-48 rounded-xl bg-neutral-100 animate-pulse" style={{ animationDelay: '0.8s' }} />
               </div>
             </div>
           )}

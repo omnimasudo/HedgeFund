@@ -36,8 +36,13 @@ export default function LandingPage() {
       <header className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-neutral-200/60">
         <div className="container mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center shadow-inner">
-              <Terminal className="text-white w-4 h-4" />
+            <div className="relative w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.15)] border border-emerald-500/20 bg-neutral-900">
+              <Image 
+                src="/wanda-hero.jpeg" 
+                alt="Wanda AI" 
+                fill 
+                className="object-cover object-top opacity-90"
+              />
             </div>
             <span className="font-bold text-xl tracking-tight text-neutral-900">Wanda AI</span>
           </div>
@@ -175,9 +180,9 @@ export default function LandingPage() {
             <p className="text-center text-xs font-bold uppercase tracking-widest text-neutral-400 mb-8">
               Aggregating Market Data via Secure APIs
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16 opacity-60 hover:opacity-100 transition-opacity duration-500">
+            <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16 opacity-90 hover:opacity-100 transition-opacity duration-500 animate-pulse">
               {dataProviders.map((provider, index) => (
-                <div key={index} className="flex items-center gap-2 text-neutral-500 grayscale hover:grayscale-0 hover:text-emerald-600 transition-all cursor-default">
+                <div key={index} className="flex items-center gap-2 text-neutral-500 grayscale hover:grayscale-0 hover:text-emerald-600 transition-all cursor-default animate-bounce" style={{ animationDelay: `${index * 0.2}s` }}>
                   <provider.icon className="w-6 h-6" />
                   <span className="font-bold text-lg tracking-tight">{provider.name}</span>
                 </div>
