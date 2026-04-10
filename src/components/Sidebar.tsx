@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { LayoutDashboard, History, Settings, Terminal, Activity } from "lucide-react"
+import { LayoutDashboard, History, Settings, Terminal, Activity, Users } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { PersonaType } from "@/types"
 import {
@@ -22,6 +22,7 @@ interface SidebarProps {
 const navItems = [
   { id: "dashboard", label: "System Overview", icon: LayoutDashboard },
   { id: "analyze", label: "Wanda Core", icon: Terminal },
+  { id: "discussion", label: "Council Discussion", icon: Users }, // SECTION BARU DITAMBAHKAN DI SINI
   { id: "history", label: "Data Logs", icon: History },
   { id: "settings", label: "Configuration", icon: Settings },
 ]
@@ -50,7 +51,7 @@ export function Sidebar({ activeView, onViewChange, persona, onPersonaChange }: 
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4 overflow-y-auto">
+      <nav className="flex-1 p-4 overflow-y-auto custom-scrollbar">
         <ul className="space-y-1.5">
           {navItems.map((item) => {
             const Icon = item.icon

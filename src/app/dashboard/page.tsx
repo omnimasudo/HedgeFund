@@ -5,6 +5,7 @@ import { Sidebar } from "@/components/Sidebar"
 import { DashboardView } from "@/components/DashboardView"
 import { StockAnalyzer } from "@/components/StockAnalyzer"
 import { Settings } from "@/components/Settings"
+import AgentDiscussion from "@/components/AgentDiscussion"
 import { AnalysisHistory, PersonaType } from "@/types"
 import { Terminal } from "lucide-react"
 import History from "@/components/History"
@@ -185,6 +186,12 @@ export default function DashboardPage() {
           {activeView === "settings" && (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-forwards">
               <Settings apiKey={apiKey} onApiKeyChange={handleApiKeyChange} />
+            </div>
+          )}
+
+          {activeView === "discussion" && (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-forwards">
+              <AgentDiscussion />
             </div>
           )}
 
