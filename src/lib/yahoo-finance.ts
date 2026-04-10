@@ -116,15 +116,46 @@ export async function fetchQuoteData(ticker: string): Promise<StockQuote | null>
       console.error(`[yahoo-finance.ts] Failed to fetch news for ${symbol}:`, newsError);
     }
 
-    // 3. COMBINE ALL DATA FROM CHART API META
+    // 3. TAMBAHAN BARU: FETCH DATA FUNDAMENTAL DARI QUOTE SUMMARY API
+    let sector = "Technology";
+    let industry = "-";
+    let trailingPE = null;
+    let pegRatio = null;
+    let actualMarketCap = meta.marketCap || 0;
+
+    try {
+      const summaryUrl = `https://query2.finance.yahoo.com/v10/finance/quoteSummary/${symbol}?modules=summaryDetail,assetProfile,defaultKeyStatistics`;
+      const summaryRes = await fetch(summaryUrl, { headers, cache: 'no-store' });
+
+      if (summaryRes.ok) {
+        const summaryData = await summaryRes.json();
+        const quoteResult = summaryData.quoteSummary?.result?.[0];
+
+        if (quoteResult) {
+          sector = quoteResult.assetProfile?.sector || sector;
+          industry = quoteResult.assetProfile?.industry || industry;
+          actualMarketCap = quoteResult.summaryDetail?.marketCap?.raw || actualMarketCap;
+          trailingPE = quoteResult.summaryDetail?.trailingPE?.raw || null;
+          pegRatio = quoteResult.defaultKeyStatistics?.pegRatio?.raw || null;
+        }
+      }
+    } catch (summaryError) {
+      console.error(`[yahoo-finance.ts] Failed to fetch fundamentals for ${symbol}:`, summaryError);
+    }
+
+    // 4. COMBINE ALL DATA (Ubah bagian return Anda menjadi seperti ini)
     return {
       symbol: meta.symbol || symbol,
       companyName: meta.shortName || meta.longName || symbol,
       currentPrice: meta.regularMarketPrice || closePrices[closePrices.length - 1] || 0,
-      marketCap: meta.marketCap || 0,
-      peRatio: 0, // Chart API doesn't provide PE ratio
-      eps: 0, // Chart API doesn't provide EPS
-      dividendYield: 0, // Chart API doesn't provide dividend
+      marketCap: actualMarketCap,
+      sector: sector,             // Tambahkan ini agar dibaca oleh History.tsx
+      industry: industry,         // Tambahkan ini
+      trailingPE: trailingPE,     // Tambahkan ini
+      pegRatio: pegRatio,         // Tambahkan ini
+      peRatio: trailingPE || 0,   // Fallback PE Ratio untuk komponen lain
+      eps: 0, 
+      dividendYield: 0, 
       week52High: meta.fiftyTwoWeekHigh || 0,
       week52Low: meta.fiftyTwoWeekLow || 0,
       volume: meta.regularMarketVolume || 0,
@@ -137,7 +168,7 @@ export async function fetchQuoteData(ticker: string): Promise<StockQuote | null>
         trend
       },
       news: recentNews
-    };
+    } as any; // Gunakan 'as any' sementara jika tipe StockQuote di types/index.ts belum Anda perbarui
 
   } catch (error: any) {
     console.error(`[yahoo-finance.ts] Error for ${ticker}:`, error.message);

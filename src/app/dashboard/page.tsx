@@ -4,10 +4,10 @@ import { useState, useEffect } from "react"
 import { Sidebar } from "@/components/Sidebar"
 import { DashboardView } from "@/components/DashboardView"
 import { StockAnalyzer } from "@/components/StockAnalyzer"
-import { History } from "@/components/History"
 import { Settings } from "@/components/Settings"
 import { AnalysisHistory, PersonaType } from "@/types"
 import { Terminal } from "lucide-react"
+import History from "@/components/History"
 
 export default function DashboardPage() {
   const [activeView, setActiveView] = useState("dashboard")
@@ -177,11 +177,7 @@ export default function DashboardPage() {
           {activeView === "history" && (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-forwards">
               <History
-                history={history}
-                onSelect={(item) => {
-                  console.log("Selected:", item)
-                }}
-                onDelete={handleDeleteHistory}
+                
               />
             </div>
           )}
