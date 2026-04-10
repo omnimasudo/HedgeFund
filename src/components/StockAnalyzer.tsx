@@ -121,7 +121,7 @@ export function StockAnalyzer({ persona, apiKey }: StockAnalyzerProps) {
             <Button
               onClick={handleAnalyze}
               disabled={isLoading || !ticker.trim()}
-              className="h-14 px-8 bg-neutral-950 hover:bg-emerald-600 text-white font-bold shadow-lg shadow-neutral-900/10 hover:shadow-emerald-600/30 transition-all duration-300"
+              className="h-14 px-8 bg-neutral-950 hver:bg-emerald-600 text-white font-bold shadow-lg shadow-neutral-900/10 hover:shadow-emerald-600/30 transition-all duration-300"
             >
               {isLoading ? (
                 <>
@@ -196,37 +196,46 @@ export function StockAnalyzer({ persona, apiKey }: StockAnalyzerProps) {
 
       {/* Results */}
       {result && !isLoading && (
-        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          
+          {/* 1. Stock Chart & Quick Stats */}
           <div className="bg-white border border-neutral-200 rounded-2xl p-6 shadow-sm">
              <StockChart data={result.quote} />
           </div>
 
-          <div className="grid grid-cols-3 gap-6">
-            <div className="col-span-2 space-y-4">
-              <h3 className="font-extrabold text-lg flex items-center gap-3 text-neutral-900">
-                Neural Swarm Analysis
-                <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border-none font-[family-name:var(--font-jetbrains-mono)] text-xs flex items-center gap-1.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
-                  4 Active Nodes
-                </Badge>
-              </h3>
-              <p className="text-xs text-neutral-500 font-medium mb-4">Click on any node to view detailed extraction logs and confidence matrix.</p>
-              <div className="grid grid-cols-2 gap-4">
-                {result.agents.map((agent) => (
-                  <AgentCard key={agent.agent} agent={agent} compact />
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <h3 className="font-extrabold text-lg mb-4 text-neutral-900">System Verdict</h3>
-              <PortfolioDecision result={result} />
+          {/* 2. Neural Swarm Analysis (Dibuat lebih besar / Full Width) */}
+          <div className="space-y-4">
+            <h3 className="font-extrabold text-lg flex items-center gap-3 text-neutral-900">
+              Neural Swarm Analysis
+              <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border-none font-[family-name:var(--font-jetbrains-mono)] text-xs">
+                4 Active Nodes
+              </Badge>
+            </h3>
+            {/* Grid dibuat mendatar (2 kolom di mobile, 4 kolom di desktop) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+              {result.agents.map((agent) => (
+                <AgentCard key={agent.agent} agent={agent} />
+              ))}
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
-            <AIReasoningPanel agents={result.agents} quote={result.quote} />
-            <NewsFeed news={result.quote.news} />
+          {/* 3. System Verdict & AI Reasoning Panel (1 Baris) */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            {/* System Verdict (Mengambil 1 Kolom) */}
+            <div className="lg:col-span-1 flex flex-col">
+              <h3 className="font-extrabold text-lg mb-4 text-neutral-900">System Verdict</h3>
+              {/* Memaksa text button di dalam PortfolioDecision menjadi putih dengan CSS selector */}
+              <div className="flex-1 [&_button]:text-white [&_button_span]:text-white">
+                <PortfolioDecision result={result} />
+              </div>
+            </div>
+
+            {/* AI Reasoning Panel (Mengambil 2 Kolom) */}
+            <div className="lg:col-span-2 flex flex-col">
+              <AIReasoningPanel agents={result.agents} quote={result.quote} />
+            </div>
+
           </div>
         </div>
       )}
