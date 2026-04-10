@@ -180,21 +180,40 @@ export default function LandingPage() {
       </section>
 
       {/* =========================================
-          2. DATA PROVIDERS SECTION
+          2. DATA PROVIDERS SECTION - HORIZONTAL INFINITE SCROLL
           ========================================= */}
       <AnimatedSection>
-        <section className="w-full py-10 bg-white border-b border-neutral-200/50 relative z-10">
+        <section className="w-full py-10 bg-white border-b border-neutral-200/50 relative z-10 overflow-hidden">
           <div className="container mx-auto px-6 max-w-7xl">
             <p className="text-center text-xs font-bold uppercase tracking-widest text-neutral-400 mb-8">
               Aggregating Market Data via Secure APIs
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16 opacity-60 hover:opacity-100 transition-opacity duration-500">
-              {dataProviders.map((provider, index) => (
-                <div key={index} className="flex items-center gap-2 text-neutral-500 grayscale hover:grayscale-0 hover:text-emerald-600 transition-all cursor-default">
-                  <provider.icon className="w-6 h-6" />
-                  <span className="font-bold text-lg tracking-tight">{provider.name}</span>
-                </div>
-              ))}
+
+            {/* Horizontal Infinite Scroll Container */}
+            <div className="relative w-full overflow-hidden">
+              <div className="flex animate-scroll">
+                {/* First set of items */}
+                {dataProviders.map((provider, index) => (
+                  <div key={`first-${index}`} className="flex items-center gap-2 text-neutral-500 grayscale hover:grayscale-0 hover:text-emerald-600 transition-all cursor-default mx-8 flex-shrink-0">
+                    <provider.icon className="w-6 h-6" />
+                    <span className="font-bold text-lg tracking-tight whitespace-nowrap">{provider.name}</span>
+                  </div>
+                ))}
+                {/* Duplicate set for seamless infinite scroll */}
+                {dataProviders.map((provider, index) => (
+                  <div key={`second-${index}`} className="flex items-center gap-2 text-neutral-500 grayscale hover:grayscale-0 hover:text-emerald-600 transition-all cursor-default mx-8 flex-shrink-0">
+                    <provider.icon className="w-6 h-6" />
+                    <span className="font-bold text-lg tracking-tight whitespace-nowrap">{provider.name}</span>
+                  </div>
+                ))}
+                {/* Third set for extra smoothness */}
+                {dataProviders.map((provider, index) => (
+                  <div key={`third-${index}`} className="flex items-center gap-2 text-neutral-500 grayscale hover:grayscale-0 hover:text-emerald-600 transition-all cursor-default mx-8 flex-shrink-0">
+                    <provider.icon className="w-6 h-6" />
+                    <span className="font-bold text-lg tracking-tight whitespace-nowrap">{provider.name}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -476,6 +495,202 @@ export default function LandingPage() {
                   </div>
                 </div>
 
+              </div>
+            </div>
+          </div>
+        </section>
+      </AnimatedSection>
+
+      {/* =========================================
+          6. ROADMAP SECTION
+          ========================================= */}
+      <AnimatedSection delay={800}>
+        <section className="w-full py-24 bg-white relative z-10">
+          <div className="container mx-auto px-6 max-w-7xl">
+            <div className="text-center mb-16">
+              <span className="text-emerald-600 font-bold uppercase tracking-widest text-xs mb-4 flex items-center justify-center gap-2">
+                <BrainCircuit className="w-4 h-4" /> Development Roadmap
+              </span>
+              <h2 className="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight text-neutral-900 leading-[1.1]">
+                Building the Future of<br/>
+                <span className="text-emerald-500">AI-Powered Finance</span>
+              </h2>
+              <p className="text-lg text-neutral-500 max-w-3xl mx-auto leading-relaxed">
+                Our 2026 roadmap outlines the systematic evolution of Wanda from a research prototype into a production-ready financial intelligence platform.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {/* Q1 2026 */}
+              <div className="relative">
+                <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-3xl p-8 h-full hover:shadow-xl hover:shadow-green-500/10 transition-all group">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-12 h-12 bg-green-500 rounded-2xl flex items-center justify-center shadow-lg">
+                      <span className="text-white font-bold text-xl">Q1</span>
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg text-neutral-900">2026</h3>
+                      <p className="text-sm text-green-600 font-semibold">Core System Launch</p>
+                    </div>
+                  </div>
+
+                  <h4 className="font-bold text-neutral-900 mb-4">Establishing the foundation of Wanda</h4>
+
+                  <ul className="space-y-3 text-sm text-neutral-600">
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Launch initial AI Hedge Fund dashboard
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Implement multi-agent analysis system (valuation, sentiment, technical)
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Deliver structured outputs (Buy / Sell / Hold with reasoning)
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Introduce Wanda interface (analysis assistant)
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Collect early user feedback and iterate
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Q2 2026 */}
+              <div className="relative">
+                <div className="bg-gradient-to-br from-yellow-50 to-amber-50 border border-yellow-200 rounded-3xl p-8 h-full hover:shadow-xl hover:shadow-yellow-500/10 transition-all group">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-12 h-12 bg-yellow-500 rounded-2xl flex items-center justify-center shadow-lg">
+                      <span className="text-white font-bold text-xl">Q2</span>
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg text-neutral-900">2026</h3>
+                      <p className="text-sm text-yellow-600 font-semibold">Reliability & Trust</p>
+                    </div>
+                  </div>
+
+                  <h4 className="font-bold text-neutral-900 mb-4">Making Wanda more accurate and explainable</h4>
+
+                  <ul className="space-y-3 text-sm text-neutral-600">
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Introduce confidence scoring system
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Add basic risk classification (Low / Medium / High)
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Improve reasoning clarity across all agents
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Integrate stable market data sources
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Optimize response speed and system reliability
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Q3 2026 */}
+              <div className="relative">
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-3xl p-8 h-full hover:shadow-xl hover:shadow-blue-500/10 transition-all group">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-12 h-12 bg-blue-500 rounded-2xl flex items-center justify-center shadow-lg">
+                      <span className="text-white font-bold text-xl">Q3</span>
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg text-neutral-900">2026</h3>
+                      <p className="text-sm text-blue-600 font-semibold">Product Depth</p>
+                    </div>
+                  </div>
+
+                  <h4 className="font-bold text-neutral-900 mb-4">Expanding from single analysis to workflow</h4>
+
+                  <ul className="space-y-3 text-sm text-neutral-600">
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Add analysis history and result tracking
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Introduce portfolio view (multi-asset overview)
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Enable comparison between multiple tickers
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Launch basic backtesting (historical analysis)
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Improve UI/UX for decision clarity
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Q4 2026 */}
+              <div className="relative">
+                <div className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 rounded-3xl p-8 h-full hover:shadow-xl hover:shadow-purple-500/10 transition-all group">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-12 h-12 bg-purple-500 rounded-2xl flex items-center justify-center shadow-lg">
+                      <span className="text-white font-bold text-xl">Q4</span>
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg text-neutral-900">2026</h3>
+                      <p className="text-sm text-purple-600 font-semibold">Platform Maturity</p>
+                    </div>
+                  </div>
+
+                  <h4 className="font-bold text-neutral-900 mb-4">Transitioning into a scalable product</h4>
+
+                  <ul className="space-y-3 text-sm text-neutral-600">
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Personalized AI behavior (risk preference, style)
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Real-time alerts for significant market changes
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Expand asset coverage (crypto / additional markets)
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Introduce API access for advanced users
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Launch initial monetization (Pro features)
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* Progress Indicator */}
+            <div className="mt-16 text-center">
+              <div className="inline-flex items-center gap-4 px-6 py-3 bg-neutral-50 border border-neutral-200 rounded-2xl">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-semibold text-neutral-700">Q1 2026: In Development</span>
+                </div>
+                <div className="w-px h-6 bg-neutral-300"></div>
+                <span className="text-sm text-neutral-500">Next: Q2 Reliability Features</span>
               </div>
             </div>
           </div>
