@@ -14,7 +14,7 @@ export default function DashboardPage() {
   const [apiKey, setApiKey] = useState("")
   const [history, setHistory] = useState<AnalysisHistory[]>([])
 
-  // Load from localStorage on mount (LOGIKA TIDAK DISENTUH)
+  // Load from localStorage on mount
   useEffect(() => {
     const savedApiKey = localStorage.getItem("openrouter_api_key")
     const savedHistory = localStorage.getItem("analysis_history")
@@ -39,7 +39,7 @@ export default function DashboardPage() {
     if (savedPersona) setPersona(savedPersona)
   }, [])
 
-  // Save to localStorage (LOGIKA TIDAK DISENTUH)
+  // Save to localStorage
   const handleApiKeyChange = (key: string) => {
     setApiKey(key)
     localStorage.setItem("openrouter_api_key", key)
@@ -55,40 +55,15 @@ export default function DashboardPage() {
     handleHistoryUpdate(newHistory)
   }
 
-  const renderContent = () => {
-    switch (activeView) {
-      case "dashboard":
-        return (
-          <DashboardView
-            history={history.map((h) => ({
-              id: h.id,
-              symbol: h.symbol,
-              decision: h.result.finalDecision.decision,
-              timestamp: h.timestamp,
-            }))}
-          />
-        )
-      case "analyze":
-        return <StockAnalyzer persona={persona} apiKey={apiKey} />
-      case "history":
-        return (
-          <History
-            history={history}
-            onSelect={(item) => {
-              console.log("Selected:", item)
-            }}
-            onDelete={handleDeleteHistory}
-          />
-        )
-      case "settings":
-        return <Settings apiKey={apiKey} onApiKeyChange={handleApiKeyChange} />
-      default:
-        return <DashboardView history={[]} />
-    }
-  }
+  // Pre-format history props for DashboardView
+  const formattedDashboardHistory = history.map((h) => ({
+    id: h.id,
+    symbol: h.symbol,
+    decision: h.result.finalDecision.decision,
+    timestamp: h.timestamp,
+  }))
 
   return (
-    // Penambahan font Inter dan background clean light mode untuk konsistensi Wanda AI
     <div className="flex min-h-screen bg-[#FDFDFD] font-[family-name:var(--font-inter)] text-neutral-900 selection:bg-emerald-200">
       <Sidebar
         activeView={activeView}
@@ -96,9 +71,46 @@ export default function DashboardPage() {
         persona={persona}
         onPersonaChange={setPersona}
       />
-      <main className="flex-1 p-8 overflow-auto">
+      
+      <main className="flex-1 p-8 overflow-x-hidden overflow-y-auto">
         <div className="max-w-7xl mx-auto h-full">
-          {renderContent()}
+          
+          {/* ANIMASI TRANSISI: Kita menggunakan Tailwind 'animate-in fade-in slide-in-from-bottom-4 duration-500' 
+            agar setiap kali tab berganti, kontennya seolah muncul perlahan dari bawah ke atas.
+          */}
+
+          {activeView === "dashboard" && (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-forwards">
+              <DashboardView history={formattedDashboardHistory} />
+            </div>
+          )}
+
+          {/* CACHING TRICK: Komponen StockAnalyzer TIDAK di-unmount agar statenya (ticker, loading, result)
+            tetap terjaga. Kita hanya mengganti class antara 'block' dan 'hidden'.
+            Animasi CSS akan tetap berjalan saat display berubah dari hidden ke block.
+          */}
+          <div className={activeView === "analyze" ? "block animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-forwards" : "hidden"}>
+            <StockAnalyzer persona={persona} apiKey={apiKey} />
+          </div>
+
+          {activeView === "history" && (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-forwards">
+              <History
+                history={history}
+                onSelect={(item) => {
+                  console.log("Selected:", item)
+                }}
+                onDelete={handleDeleteHistory}
+              />
+            </div>
+          )}
+
+          {activeView === "settings" && (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-forwards">
+              <Settings apiKey={apiKey} onApiKeyChange={handleApiKeyChange} />
+            </div>
+          )}
+
         </div>
       </main>
     </div>

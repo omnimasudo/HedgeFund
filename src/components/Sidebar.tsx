@@ -1,6 +1,7 @@
 "use client"
 
-import { LayoutDashboard, BarChart3, History, Settings, Terminal, Activity } from "lucide-react"
+import Image from "next/image"
+import { LayoutDashboard, History, Settings, Terminal, Activity } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { PersonaType } from "@/types"
 import {
@@ -27,12 +28,18 @@ const navItems = [
 
 export function Sidebar({ activeView, onViewChange, persona, onPersonaChange }: SidebarProps) {
   return (
-    <aside className="w-64 border-r border-neutral-200 bg-[#FDFDFD] flex flex-col h-screen font-[family-name:var(--font-inter)]">
-      {/* Logo */}
+    <aside className="w-64 border-r border-neutral-200 bg-[#FDFDFD] flex flex-col h-screen font-[family-name:var(--font-inter)] z-10">
+      {/* Logo Area */}
       <div className="p-6 border-b border-neutral-200/60 bg-white">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-emerald-500 flex items-center justify-center shadow-inner">
-            <Activity className="w-5 h-5 text-white" />
+          {/* Menggunakan Image untuk Maskot Wanda */}
+          <div className="relative w-11 h-11 rounded-xl overflow-hidden flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.15)] border border-emerald-500/20 bg-neutral-900">
+            <Image 
+              src="/wanda-hero.jpeg" 
+              alt="Wanda AI" 
+              fill 
+              className="object-cover object-top opacity-90"
+            />
           </div>
           <div>
             <h1 className="font-extrabold text-lg tracking-tight text-neutral-900">Wanda AI</h1>
@@ -73,7 +80,7 @@ export function Sidebar({ activeView, onViewChange, persona, onPersonaChange }: 
           <Terminal className="w-3 h-3" /> Processing Model
         </label>
         <Select value={persona} onValueChange={(v) => onPersonaChange(v as PersonaType)}>
-          <SelectTrigger className="w-full bg-neutral-50 border-neutral-200 text-sm font-semibold">
+          <SelectTrigger className="w-full bg-neutral-50 border-neutral-200 text-sm font-semibold focus:ring-emerald-500">
             <SelectValue placeholder="Select logic" />
           </SelectTrigger>
           <SelectContent>

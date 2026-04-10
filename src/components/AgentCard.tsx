@@ -19,10 +19,10 @@ const agentIcons: Record<string, React.ReactNode> = {
 }
 
 const agentColors: Record<string, string> = {
-  value: "bg-amber-500/10 text-amber-600 border-amber-500/20",
-  growth: "bg-blue-500/10 text-blue-600 border-blue-500/20",
-  quant: "bg-purple-500/10 text-purple-600 border-purple-500/20",
-  sentiment: "bg-pink-500/10 text-pink-600 border-pink-500/20",
+  value: "bg-white text-emerald-600 border-emerald-200",
+  growth: "bg-white text-emerald-600 border-emerald-200",
+  quant: "bg-white text-emerald-600 border-emerald-200",
+  sentiment: "bg-white text-emerald-600 border-emerald-200",
 }
 
 export function AgentCard({ agent, compact = false }: AgentCardProps) {
