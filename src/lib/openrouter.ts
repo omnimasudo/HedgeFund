@@ -20,7 +20,7 @@ async function callOpenRouter(
       'X-Title': 'AI Hedge Fund',
     },
     body: JSON.stringify({
-      model: 'anthropic/claude-3-haiku',
+      model: 'google/gemma-2-9b-it',
       messages,
       temperature: 0.7,
       max_tokens: 1000,

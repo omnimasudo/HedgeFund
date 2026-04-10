@@ -23,12 +23,14 @@ export function PortfolioDecision({ result }: PortfolioDecisionProps) {
   const decisionClass = getDecisionColor(finalDecision.decision)
 
   const handleShare = () => {
-    const text = `AI Hedge Fund just analyzed $${symbol}:
+    const text = `Wanda - AI Hedge Fund just analyzed $${symbol}:
 
 → ${finalDecision.decision}
 → Confidence: ${finalDecision.confidence}%
 → Risk: ${finalDecision.riskLevel}
 → Reason: ${finalDecision.summary}
+
+Try Wanda AI: www.wandacapital.site
 
 #AIInvesting #StockAnalysis`
 

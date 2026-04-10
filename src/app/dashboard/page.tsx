@@ -7,17 +7,19 @@ import { StockAnalyzer } from "@/components/StockAnalyzer"
 import { History } from "@/components/History"
 import { Settings } from "@/components/Settings"
 import { AnalysisHistory, PersonaType } from "@/types"
+import { Terminal } from "lucide-react"
 
 export default function DashboardPage() {
   const [activeView, setActiveView] = useState("dashboard")
   const [persona, setPersona] = useState<PersonaType>("balanced")
   const [apiKey, setApiKey] = useState("")
   const [history, setHistory] = useState<AnalysisHistory[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [isFading, setIsFading] = useState(false)
-  const [showContent, setShowContent] = useState(false)
+  
+  // State untuk Booting Screen
+  const [isBooting, setIsBooting] = useState(true)
+  const [bootLog, setBootLog] = useState<string[]>([])
 
-  // Load from localStorage on mount
+  // Load dari localStorage
   useEffect(() => {
     const savedApiKey = localStorage.getItem("openrouter_api_key")
     const savedHistory = localStorage.getItem("analysis_history")
@@ -40,18 +42,44 @@ export default function DashboardPage() {
       }
     }
     if (savedPersona) setPersona(savedPersona)
-
-    // Simulate loading time for finance vibes
-    setTimeout(() => {
-      setIsFading(true)
-      setTimeout(() => {
-        setIsLoading(false)
-        setTimeout(() => setShowContent(true), 200) // Small delay before showing content
-      }, 800) // Fade out duration
-    }, 3000)
   }, [])
 
-  // Save to localStorage
+  // Efek Booting Screen (Terminal Vibes) - FIX ERROR UNDEFINED
+  useEffect(() => {
+    const sequence = [
+      "WANDA_OS [Version 1.0.4.2]",
+      "Bypassing standard latency protocols: OK",
+      "Loading Neural Swarm models...",
+      "Authenticating credentials...",
+      "Access Granted. Initializing UI..."
+    ];
+    
+    let currentIndex = 0;
+    
+    const logInterval = setInterval(() => {
+      // Pastikan index tidak melebihi panjang array
+      if (currentIndex < sequence.length) {
+        const currentText = sequence[currentIndex];
+        // Pastikan currentText ada (tidak undefined) sebelum di-push ke array
+        if (currentText) {
+          setBootLog(prev => [...prev, currentText]);
+        }
+        currentIndex++;
+      } else {
+        clearInterval(logInterval); // Bersihkan interval jika sudah selesai
+      }
+    }, 400); 
+
+    const finishTimeout = setTimeout(() => {
+      setIsBooting(false);
+    }, 3200); 
+
+    return () => {
+      clearInterval(logInterval);
+      clearTimeout(finishTimeout);
+    };
+  }, []);
+
   const handleApiKeyChange = (key: string) => {
     setApiKey(key)
     localStorage.setItem("openrouter_api_key", key)
@@ -67,7 +95,6 @@ export default function DashboardPage() {
     handleHistoryUpdate(newHistory)
   }
 
-  // Pre-format history props for DashboardView
   const formattedDashboardHistory = history.map((h) => ({
     id: h.id,
     symbol: h.symbol,
@@ -75,79 +102,83 @@ export default function DashboardPage() {
     timestamp: h.timestamp,
   }))
 
-  return (
-    <>
-      {isLoading && (
-        <div className={`fixed inset-0 z-50 bg-neutral-900 flex items-center justify-center transition-opacity duration-800 ${isFading ? 'opacity-0' : 'opacity-100'}`}>
-          <div className="text-center space-y-8">
-            <div className="relative">
-              <div className="w-24 h-24 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin mx-auto"></div>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-16 h-16 border-4 border-transparent border-t-teal-400 rounded-full animate-spin"></div>
+  // ==========================================
+  // LOADING RENDER (BOOT SCREEN)
+  // ==========================================
+  if (isBooting) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-neutral-950 font-[family-name:var(--font-jetbrains-mono)] overflow-hidden selection:bg-emerald-500/30 animate-in fade-in duration-1000">
+        
+        {/* Glow Effects */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/5 blur-[100px] rounded-full pointer-events-none"></div>
+
+        <div className="relative z-10 w-full max-w-lg p-8 border border-neutral-800 bg-neutral-900/50 rounded-2xl shadow-2xl backdrop-blur-sm">
+          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-neutral-800">
+             <div className="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center">
+                <Terminal className="w-5 h-5 text-emerald-400" />
+             </div>
+             <div>
+               <h2 className="text-emerald-500 font-bold tracking-widest text-sm uppercase">System Boot</h2>
+               <p className="text-neutral-500 text-xs">Auth Protocol V2</p>
+             </div>
+          </div>
+
+          <div className="space-y-2 h-40 flex flex-col justify-end">
+            {bootLog.map((log, index) => (
+              <div key={index} className="flex items-start gap-2 text-sm text-neutral-300 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <span className="text-emerald-500">{">"}</span>
+                {/* TAMBAHAN ?: log?.includes mencegah error jika log kebetulan undefined */}
+                <span className={index === bootLog.length - 1 && log?.includes("Access Granted") ? "text-emerald-400 font-bold" : ""}>
+                  {log}
+                </span>
               </div>
+            ))}
+            {/* Blinking Cursor */}
+            <div className="flex items-center gap-2 text-sm text-emerald-500 animate-pulse mt-1">
+              <span>{">"}</span>
+              <span className="w-2 h-4 bg-emerald-500 block"></span>
             </div>
-            <div className="space-y-4">
-              <h2 className="text-2xl font-bold text-white font-[family-name:var(--font-inter)]">Initializing Wanda Core</h2>
-              <div className="text-emerald-400 font-[family-name:var(--font-jetbrains-mono)] text-sm space-y-2">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                  <span>Loading market data streams...</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-                  <span>Calibrating AI models...</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
-                  <span>Establishing secure connections...</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }}></div>
-                  <span>System ready for analysis</span>
-                </div>
-              </div>
-            </div>
+          </div>
+
+          {/* Progress Bar Mock */}
+          <div className="mt-8 w-full h-1 bg-neutral-800 rounded-full overflow-hidden">
+             <div className="h-full bg-emerald-500 rounded-full transition-all duration-[2800ms] ease-out w-full" style={{ width: bootLog.length > 0 ? '100%' : '0%' }}></div>
           </div>
         </div>
-      )}
-      <div className="flex min-h-screen bg-[#FDFDFD] font-[family-name:var(--font-inter)] text-neutral-900 selection:bg-emerald-200">
-        {showContent && (
-          <div className="animate-in slide-in-from-left-4 duration-700 fill-mode-forwards">
-            <Sidebar
-              activeView={activeView}
-              onViewChange={setActiveView}
-              persona={persona}
-              onPersonaChange={setPersona}
-            />
-          </div>
-        )}
-        
-        <main className="flex-1 p-8 overflow-x-hidden overflow-y-auto">
-          <div className="max-w-7xl mx-auto h-full">
-            
-            {/* ANIMASI TRANSISI: Kita menggunakan Tailwind 'animate-in fade-in slide-in-from-bottom-4 duration-500' 
-              agar setiap kali tab berganti, kontennya seolah muncul perlahan dari bawah ke atas.
-            */}
+      </div>
+    )
+  }
 
-            {activeView === "dashboard" && showContent && (
-              <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-forwards">
-                <DashboardView history={formattedDashboardHistory} />
-              </div>
-            )}
-
-            {/* CACHING TRICK: Komponen StockAnalyzer TIDAK di-unmount agar statenya (ticker, loading, result)
-              tetap terjaga. Kita hanya mengganti class antara 'block' dan 'hidden'.
-              Animasi CSS akan tetap berjalan saat display berubah dari hidden ke block.
-            */}
-            <div className={activeView === "analyze" && showContent ? "block animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-forwards" : "hidden"}>
-              <StockAnalyzer persona={persona} apiKey={apiKey} />
+  // ==========================================
+  // DASHBOARD RENDER
+  // ==========================================
+  return (
+    <div className="flex min-h-screen bg-[#FDFDFD] font-[family-name:var(--font-inter)] text-neutral-900 selection:bg-emerald-200 animate-in fade-in duration-1000">
+      <Sidebar
+        activeView={activeView}
+        onViewChange={setActiveView}
+        persona={persona}
+        onPersonaChange={setPersona}
+      />
+      
+      <main className="flex-1 p-8 overflow-x-hidden overflow-y-auto">
+        <div className="max-w-7xl mx-auto h-full">
+          
+          {activeView === "dashboard" && (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-forwards">
+              <DashboardView history={formattedDashboardHistory} />
             </div>
+          )}
 
-            {activeView === "history" && showContent && (
-              <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-forwards">
-                <History
-                  history={history}
-                  onSelect={(item) => {
+          <div className={activeView === "analyze" ? "block animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-forwards" : "hidden"}>
+            <StockAnalyzer persona={persona} apiKey={apiKey} />
+          </div>
+
+          {activeView === "history" && (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-forwards">
+              <History
+                history={history}
+                onSelect={(item) => {
                   console.log("Selected:", item)
                 }}
                 onDelete={handleDeleteHistory}
@@ -164,6 +195,5 @@ export default function DashboardPage() {
         </div>
       </main>
     </div>
-    </>
   )
 }

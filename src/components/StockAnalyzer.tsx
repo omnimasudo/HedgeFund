@@ -1,51 +1,81 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Skeleton } from "@/components/ui/skeleton"
 import { StockChart } from "@/components/StockChart"
 import { AgentCard } from "@/components/AgentCard"
 import { AIReasoningPanel } from "@/components/AIReasoningPanel"
 import { PortfolioDecision } from "@/components/PortfolioDecision"
 import { NewsFeed } from "@/components/NewsFeed"
 import { AnalysisResult, PersonaType } from "@/types"
-import { Search, Loader2, Zap, AlertCircle, TerminalSquare } from "lucide-react"
+import { Search, Loader2, Zap, AlertCircle, TerminalSquare, Activity } from "lucide-react"
 
 interface StockAnalyzerProps {
   persona: PersonaType
-  apiKey?: string // Optional - will use server-side env if not provided
+  apiKey?: string
 }
+
+const LOADING_STEPS = [
+  "Establishing secure tunnel to market makers...",
+  "Bypassing standard latency protocols: OK",
+  "Scraping institutional datasets & dark pool prints...",
+  "Deploying Neural Swarm (4 Active Nodes)...",
+  "Cross-referencing intrinsic value & global sentiment...",
+  "Compiling final algorithmic verdict..."
+]
 
 export function StockAnalyzer({ persona, apiKey }: StockAnalyzerProps) {
   const [ticker, setTicker] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const [loadingStepIdx, setLoadingStepIdx] = useState(0)
   const [error, setError] = useState<string | null>(null)
   const [result, setResult] = useState<AnalysisResult | null>(null)
 
-  // LOGIKA API TIDAK DISENTUH
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    if (isLoading) {
+      interval = setInterval(() => {
+        setLoadingStepIdx((prev) => (prev < LOADING_STEPS.length - 1 ? prev + 1 : prev))
+      }, 500) 
+    } else {
+      setLoadingStepIdx(0)
+    }
+    return () => clearInterval(interval)
+  }, [isLoading])
+
   const handleAnalyze = async () => {
     if (!ticker.trim()) return
 
     setIsLoading(true)
     setError(null)
+    setResult(null)
 
     try {
-      const response = await fetch("/api/analyze", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ticker: ticker.trim(),
-          persona,
-          ...(apiKey ? { apiKey } : {}) 
+      const [response] = await Promise.all([
+        fetch("/api/analyze", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ticker: ticker.trim(),
+            persona,
+            ...(apiKey ? { apiKey } : {}) 
+          }),
         }),
-      })
+        new Promise(resolve => setTimeout(resolve, 3200)) 
+      ])
 
       if (!response.ok) {
-        const data = await response.json()
-        throw new Error(data.error || "Analysis failed")
+        const data = await response.json().catch(() => ({}));
+        
+        // FIX API 402 ERROR: Tangkap error saldo habis dari OpenRouter
+        if (response.status === 402) {
+           throw new Error("API_ERROR_402: Insufficient OpenRouter credits. Please top up your balance at openrouter.ai.");
+        }
+        
+        throw new Error(data.error || `Analysis failed with status: ${response.status}`);
       }
 
       const data = await response.json()
@@ -75,8 +105,8 @@ export function StockAnalyzer({ persona, apiKey }: StockAnalyzerProps) {
         </div>
         <CardContent className="pt-6">
           <div className="flex gap-3">
-            <div className="relative flex-1">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 font-[family-name:var(--font-jetbrains-mono)] text-neutral-400 font-bold">
+            <div className="relative flex-1 group">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 font-[family-name:var(--font-jetbrains-mono)] text-emerald-600 font-bold group-focus-within:animate-pulse">
                 $
               </span>
               <Input
@@ -84,19 +114,19 @@ export function StockAnalyzer({ persona, apiKey }: StockAnalyzerProps) {
                 value={ticker}
                 onChange={(e) => setTicker(e.target.value.toUpperCase())}
                 onKeyPress={handleKeyPress}
-                className="pl-10 h-14 text-lg font-bold font-[family-name:var(--font-jetbrains-mono)] bg-neutral-50 border-neutral-200 focus-visible:ring-emerald-500 uppercase tracking-widest text-neutral-900"
+                className="pl-10 h-14 text-lg font-bold font-[family-name:var(--font-jetbrains-mono)] bg-neutral-50 border-neutral-200 focus-visible:ring-emerald-500 uppercase tracking-widest text-neutral-900 transition-all"
                 disabled={isLoading}
               />
             </div>
             <Button
               onClick={handleAnalyze}
               disabled={isLoading || !ticker.trim()}
-              className="h-14 px-8 bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-lg shadow-emerald-600/20 transition-all"
+              className="h-14 px-8 bg-neutral-950 hover:bg-emerald-600 text-white font-bold shadow-lg shadow-neutral-900/10 hover:shadow-emerald-600/30 transition-all duration-300"
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  Processing...
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin text-emerald-400" />
+                  <span className="text-emerald-400">Processing...</span>
                 </>
               ) : (
                 <>
@@ -109,7 +139,7 @@ export function StockAnalyzer({ persona, apiKey }: StockAnalyzerProps) {
 
           {/* Error Message */}
           {error && (
-            <div className="mt-4 p-4 rounded-xl bg-red-50 border border-red-200 flex items-start gap-3">
+            <div className="mt-4 p-4 rounded-xl bg-red-50 border border-red-200 flex items-start gap-3 animate-in slide-in-from-top-2">
               <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm font-bold text-red-900">{error}</p>
@@ -122,51 +152,42 @@ export function StockAnalyzer({ persona, apiKey }: StockAnalyzerProps) {
             </div>
           )}
 
-          {/* Loading State */}
+          {/* Heavy Loading State */}
           {isLoading && (
-            <div className="mt-8 space-y-6">
-              <div className="bg-neutral-50 border border-neutral-200 rounded-xl p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></div>
-                  <span className="text-sm font-bold text-emerald-700 font-[family-name:var(--font-jetbrains-mono)] uppercase tracking-wider">
-                    Processing {ticker} Analysis
-                  </span>
-                </div>
-                <div className="space-y-3 text-xs font-[family-name:var(--font-jetbrains-mono)] text-neutral-600">
-                  <div className="flex items-center gap-2 animate-fade-in" style={{ animationDelay: '0s' }}>
-                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
-                    <span>Fetching real-time market data from Bloomberg API...</span>
-                  </div>
-                  <div className="flex items-center gap-2 animate-fade-in" style={{ animationDelay: '0.5s' }}>
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                    <span>Analyzing technical indicators and price patterns...</span>
-                  </div>
-                  <div className="flex items-center gap-2 animate-fade-in" style={{ animationDelay: '1s' }}>
-                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
-                    <span>Running AI sentiment analysis on news feeds...</span>
-                  </div>
-                  <div className="flex items-center gap-2 animate-fade-in" style={{ animationDelay: '1.5s' }}>
-                    <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '0.6s' }}></div>
-                    <span>Calculating risk metrics and portfolio impact...</span>
-                  </div>
-                  <div className="flex items-center gap-2 animate-fade-in" style={{ animationDelay: '2s' }}>
-                    <div className="w-2 h-2 bg-red-500 rounded-full animate-bounce" style={{ animationDelay: '0.8s' }}></div>
-                    <span>Generating investment recommendation...</span>
-                  </div>
-                </div>
-                <div className="mt-4 w-full bg-neutral-200 rounded-full h-2">
-                  <div className="bg-emerald-500 h-2 rounded-full animate-pulse" style={{ width: '60%' }}></div>
-                </div>
+            <div className="mt-8 p-6 rounded-2xl bg-neutral-950 border border-neutral-800 shadow-2xl relative overflow-hidden animate-in fade-in duration-500">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-emerald-500/5 blur-[80px] rounded-full pointer-events-none"></div>
+              
+              <div className="flex items-center gap-3 mb-6 border-b border-neutral-800 pb-4 relative z-10">
+                 <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/30">
+                   <Activity className="w-4 h-4 text-emerald-500 animate-pulse" />
+                 </div>
+                 <div>
+                   <span className="text-emerald-500 font-bold tracking-widest text-sm uppercase font-[family-name:var(--font-jetbrains-mono)] block">
+                     Neural Swarm Execution
+                   </span>
+                   <span className="text-neutral-500 text-xs font-[family-name:var(--font-jetbrains-mono)]">TARGET: {ticker || "UNKNOWN"}</span>
+                 </div>
               </div>
-              <div className="grid grid-cols-3 gap-4">
-                <Skeleton className="h-16 rounded-xl bg-neutral-100 animate-pulse" />
-                <Skeleton className="h-16 rounded-xl bg-neutral-100 animate-pulse" style={{ animationDelay: '0.2s' }} />
-                <Skeleton className="h-16 rounded-xl bg-neutral-100 animate-pulse" style={{ animationDelay: '0.4s' }} />
-              </div>
-              <Skeleton className="h-[350px] rounded-2xl bg-neutral-100 animate-pulse" />
-              <div className="grid grid-cols-2 gap-4">
-                <Skeleton className="h-48 rounded-xl bg-neutral-100 animate-pulse" style={{ animationDelay: '0.6s' }} />
-                <Skeleton className="h-48 rounded-xl bg-neutral-100 animate-pulse" style={{ animationDelay: '0.8s' }} />
+
+              {/* FIX OVERFLOW: Tambahkan overflow-hidden dan gradient top masking */}
+              <div className="relative h-40 overflow-hidden font-[family-name:var(--font-jetbrains-mono)] text-sm z-10">
+                 {/* Fading Mask di bagian atas agar teks memudar rapi saat terdorong */}
+                 <div className="absolute top-0 left-0 w-full h-12 bg-gradient-to-b from-neutral-950 to-transparent z-20"></div>
+                 
+                 <div className="absolute bottom-0 w-full flex flex-col justify-end space-y-3 pb-2">
+                   {LOADING_STEPS.slice(0, loadingStepIdx + 1).map((step, idx) => (
+                      <div key={idx} className="flex items-start gap-2 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                        <span className="text-emerald-600 font-bold">{">"}</span>
+                        <span className={idx === loadingStepIdx ? "text-emerald-400 font-bold drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]" : "text-neutral-500"}>
+                          {step}
+                        </span>
+                      </div>
+                   ))}
+                   <div className="flex items-center gap-2 mt-1">
+                     <span className="text-emerald-600 font-bold">{">"}</span>
+                     <span className="w-2 h-4 bg-emerald-500 animate-pulse block"></span>
+                   </div>
+                 </div>
               </div>
             </div>
           )}
@@ -175,37 +196,34 @@ export function StockAnalyzer({ persona, apiKey }: StockAnalyzerProps) {
 
       {/* Results */}
       {result && !isLoading && (
-        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-          {/* Stock Chart & Quick Stats */}
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
           <div className="bg-white border border-neutral-200 rounded-2xl p-6 shadow-sm">
              <StockChart data={result.quote} />
           </div>
 
-          {/* Agent Cards & AI Reasoning */}
           <div className="grid grid-cols-3 gap-6">
-            {/* Agent Insights */}
             <div className="col-span-2 space-y-4">
               <h3 className="font-extrabold text-lg flex items-center gap-3 text-neutral-900">
                 Neural Swarm Analysis
-                <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border-none font-[family-name:var(--font-jetbrains-mono)] text-xs">
+                <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border-none font-[family-name:var(--font-jetbrains-mono)] text-xs flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
                   4 Active Nodes
                 </Badge>
               </h3>
+              <p className="text-xs text-neutral-500 font-medium mb-4">Click on any node to view detailed extraction logs and confidence matrix.</p>
               <div className="grid grid-cols-2 gap-4">
                 {result.agents.map((agent) => (
-                  <AgentCard key={agent.agent} agent={agent} />
+                  <AgentCard key={agent.agent} agent={agent} compact />
                 ))}
               </div>
             </div>
 
-            {/* Portfolio Decision */}
             <div>
               <h3 className="font-extrabold text-lg mb-4 text-neutral-900">System Verdict</h3>
               <PortfolioDecision result={result} />
             </div>
           </div>
 
-          {/* AI Reasoning Panel & News */}
           <div className="grid grid-cols-2 gap-6">
             <AIReasoningPanel agents={result.agents} quote={result.quote} />
             <NewsFeed news={result.quote.news} />

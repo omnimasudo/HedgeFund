@@ -17,9 +17,15 @@ import {
   LineChart,
   Cpu,
   Globe,
-  Twitter
+  Twitter,
+  TrendingUp,
+  Gauge,
+  Landmark,
+  CandlestickChart,
+  Briefcase,
+  BrainCircuit,
+  ShieldAlert
 } from "lucide-react";
-import { SiApachespark, SiOpenai } from "react-icons/si";
 
 export default function LandingPage() {
   const dataProviders = [
@@ -33,19 +39,20 @@ export default function LandingPage() {
   return (
     <main className="flex flex-col min-h-screen bg-[#FDFDFD] text-neutral-900 selection:bg-emerald-200 font-[family-name:var(--font-inter)] overflow-hidden">
       
-      {/* NAVBAR (Inline for easy copy-paste) */}
+      {/* NAVBAR */}
       <header className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-neutral-200/60">
         <div className="container mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="relative w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.15)] border border-emerald-500/20 bg-neutral-900">
+          <div className="flex items-center gap-3 group cursor-pointer">
+            {/* ENHANCED PROFILE IMAGE WIDGET */}
+            <div className="relative w-9 h-9 rounded-full overflow-hidden border-[1.5px] border-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.4)] group-hover:shadow-[0_0_20px_rgba(16,185,129,0.7)] transition-all duration-300">
               <Image 
                 src="/wanda-hero.jpeg" 
-                alt="Wanda AI" 
+                alt="Wanda AI Agent" 
                 fill 
-                className="object-cover object-top opacity-90"
+                className="object-cover object-center scale-110"
               />
             </div>
-            <span className="font-bold text-xl tracking-tight text-neutral-900">Wanda AI</span>
+            <span className="font-bold text-xl tracking-tight text-neutral-900 group-hover:text-emerald-700 transition-colors">Wanda AI</span>
           </div>
           <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-neutral-500">
             <Link href="#core-metrics" className="hover:text-emerald-600 transition-colors">Metrics</Link>
@@ -181,15 +188,13 @@ export default function LandingPage() {
             <p className="text-center text-xs font-bold uppercase tracking-widest text-neutral-400 mb-8">
               Aggregating Market Data via Secure APIs
             </p>
-            <div className="overflow-hidden">
-              <div className="flex items-center gap-8 md:gap-16 opacity-90 hover:opacity-100 transition-opacity duration-500 animate-scroll">
-                {[...dataProviders, ...dataProviders].map((provider, index) => (
-                  <div key={`${index}-${provider.name}`} className="flex items-center gap-2 text-neutral-700 grayscale hover:grayscale-0 hover:text-emerald-600 transition-all cursor-default flex-shrink-0">
-                    <provider.icon className="w-6 h-6" />
-                    <span className="font-bold text-lg tracking-tight">{provider.name}</span>
-                  </div>
-                ))}
-              </div>
+            <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16 opacity-60 hover:opacity-100 transition-opacity duration-500">
+              {dataProviders.map((provider, index) => (
+                <div key={index} className="flex items-center gap-2 text-neutral-500 grayscale hover:grayscale-0 hover:text-emerald-600 transition-all cursor-default">
+                  <provider.icon className="w-6 h-6" />
+                  <span className="font-bold text-lg tracking-tight">{provider.name}</span>
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -204,7 +209,7 @@ export default function LandingPage() {
             <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
               <div>
                 <h2 className="text-3xl md:text-4xl font-extrabold mb-3 text-neutral-900 tracking-tight flex items-center gap-3">
-                  Core Metrics <SiApachespark className="w-6 h-6 text-emerald-500" />
+                  Core Metrics <Activity className="w-6 h-6 text-emerald-500" />
                 </h2>
                 <p className="text-neutral-500 text-lg">
                   High-fidelity data parsing crafted for absolute precision.
@@ -215,7 +220,7 @@ export default function LandingPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div className="p-8 border border-neutral-200 rounded-3xl bg-white hover:shadow-xl hover:shadow-emerald-500/5 hover:border-emerald-200 transition-all group">
                 <div className="w-12 h-12 bg-neutral-50 rounded-2xl flex items-center justify-center mb-6 border border-neutral-100 group-hover:bg-emerald-50 transition-colors">
-                  <LineChart className="w-6 h-6 text-neutral-700 group-hover:text-emerald-600" />
+                  <TrendingUp className="w-6 h-6 text-neutral-700 group-hover:text-emerald-600" />
                 </div>
                 <h3 className="font-[family-name:var(--font-jetbrains-mono)] text-lg font-bold text-neutral-900 mb-3">SMA 20 Convergence</h3>
                 <p className="text-neutral-500 text-sm leading-relaxed">Analyzes trailing 20-day Simple Moving Average boundaries against instant liquidity volume in real-time.</p>
@@ -226,7 +231,7 @@ export default function LandingPage() {
                   <Activity className="w-24 h-24" />
                 </div>
                 <div className="w-12 h-12 bg-neutral-50 rounded-2xl flex items-center justify-center mb-6 border border-neutral-100 group-hover:bg-emerald-50 transition-colors">
-                  <Cpu className="w-6 h-6 text-neutral-700 group-hover:text-emerald-600" />
+                  <Gauge className="w-6 h-6 text-neutral-700 group-hover:text-emerald-600" />
                 </div>
                 <h3 className="font-[family-name:var(--font-jetbrains-mono)] text-lg font-bold text-neutral-900 mb-3">RSI Overbought Index</h3>
                 <p className="text-neutral-500 text-sm leading-relaxed">Calculates Relative Strength Index recursively to identify deep intrinsic valuation mismatches.</p>
@@ -234,7 +239,7 @@ export default function LandingPage() {
               
               <div className="p-8 border border-neutral-200 rounded-3xl bg-white hover:shadow-xl hover:shadow-emerald-500/5 hover:border-emerald-200 transition-all group">
                 <div className="w-12 h-12 bg-neutral-50 rounded-2xl flex items-center justify-center mb-6 border border-neutral-100 group-hover:bg-emerald-50 transition-colors">
-                  <ShieldCheck className="w-6 h-6 text-neutral-700 group-hover:text-emerald-600" />
+                  <Landmark className="w-6 h-6 text-neutral-700 group-hover:text-emerald-600" />
                 </div>
                 <h3 className="font-[family-name:var(--font-jetbrains-mono)] text-lg font-bold text-neutral-900 mb-3">P/E Ratio Modeler</h3>
                 <p className="text-neutral-500 text-sm leading-relaxed">Multi-vector analysis comparing Price-to-Earnings against current macroeconomic sector conditions.</p>
@@ -255,7 +260,7 @@ export default function LandingPage() {
               {/* Left Content */}
               <div className="lg:w-1/2">
                 <span className="text-emerald-600 font-bold uppercase tracking-widest text-xs mb-4 flex items-center gap-2">
-                  <SiOpenai className="w-4 h-4" /> Advanced Analysis
+                  <Users className="w-4 h-4" /> Advanced Analysis
                 </span>
                 <h2 className="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight text-neutral-900 leading-[1.1]">
                   Multi-Agent <br/>
@@ -293,28 +298,28 @@ export default function LandingPage() {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="bg-white rounded-xl p-4 border border-neutral-200">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mb-3">
-                          <LineChart className="w-4 h-4 text-blue-600" />
+                          <CandlestickChart className="w-4 h-4 text-blue-600" />
                         </div>
                         <h4 className="font-semibold text-sm mb-1">Technical</h4>
                         <p className="text-xs text-neutral-500">Bullish trend confirmed</p>
                       </div>
                       <div className="bg-white rounded-xl p-4 border border-neutral-200">
                         <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mb-3">
-                          <Database className="w-4 h-4 text-green-600" />
+                          <Briefcase className="w-4 h-4 text-green-600" />
                         </div>
                         <h4 className="font-semibold text-sm mb-1">Fundamental</h4>
                         <p className="text-xs text-neutral-500">Strong earnings growth</p>
                       </div>
                       <div className="bg-white rounded-xl p-4 border border-neutral-200">
                         <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mb-3">
-                          <Bot className="w-4 h-4 text-purple-600" />
+                          <BrainCircuit className="w-4 h-4 text-purple-600" />
                         </div>
                         <h4 className="font-semibold text-sm mb-1">Sentiment</h4>
                         <p className="text-xs text-neutral-500">Positive news coverage</p>
                       </div>
                       <div className="bg-white rounded-xl p-4 border border-neutral-200">
                         <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center mb-3">
-                          <ShieldCheck className="w-4 h-4 text-orange-600" />
+                          <ShieldAlert className="w-4 h-4 text-orange-600" />
                         </div>
                         <h4 className="font-semibold text-sm mb-1">Risk</h4>
                         <p className="text-xs text-neutral-500">Low volatility exposure</p>
@@ -513,26 +518,5 @@ export default function LandingPage() {
       </AnimatedSection>
       
     </main>
-  );
-}
-
-// Dummy component just to satisfy the import reference for Zap if it wasn't extracted earlier. 
-// Added locally to ensure copy-paste works flawlessly.
-function Zap(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-    </svg>
   );
 }
