@@ -3,17 +3,18 @@ import { fetchQuoteData } from '@/lib/yahoo-finance';
 import { analyzeWithAgents, generateFinalDecision } from '@/lib/openrouter';
 import { AnalysisResult, PersonaType } from '@/types';
 
-// Server-side API key from environment (more secure, used as primary)
-const SERVER_API_KEY = process.env.OPENROUTER_API_KEY;
-
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { ticker, persona = 'balanced' } = body;
 
-    // Get API key: server env first (secure), then client-provided (flexible)
-    const clientApiKey = body.apiKey;
-    const apiKey = SERVER_API_KEY || clientApiKey;
+    // LOGIC PIVOT: Prioritaskan API Key dari Client (BYOK). 
+    // Jika user tidak input, baru fallback ke environment variable server.
+    // Tambahkan .trim() untuk mencegah error karena spasi yang tidak disengaja
+    const clientApiKey = body.apiKey?.trim();
+    const serverApiKey = process.env.OPENROUTER_API_KEY?.trim();
+    
+    const apiKey = clientApiKey || serverApiKey;
 
     if (!ticker) {
       return NextResponse.json({ error: 'Ticker is required' }, { status: 400 });
@@ -21,8 +22,8 @@ export async function POST(request: NextRequest) {
 
     if (!apiKey) {
       return NextResponse.json({
-        error: 'OpenRouter API key required. Please add OPENROUTER_API_KEY to .env file or enter your key in Settings.'
-      }, { status: 400 });
+        error: 'OpenRouter API key required. Please enter your key in Settings or add OPENROUTER_API_KEY to server .env file.'
+      }, { status: 401 }); // Ubah status ke 401 Unauthorized
     }
 
     // Fetch stock data from Yahoo Finance
@@ -47,8 +48,16 @@ export async function POST(request: NextRequest) {
     };
 
     return NextResponse.json(result);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Analysis API error:', error);
+    
+    // Menangkap pesan error spesifik dari OpenRouter agar terlihat di frontend
+    if (error.message?.includes('OpenRouter API error: 401')) {
+      return NextResponse.json({ 
+        error: 'Invalid API Key. Please check your OpenRouter key or server .env configuration.' 
+      }, { status: 401 });
+    }
+
     return NextResponse.json({ error: 'Analysis failed' }, { status: 500 });
   }
 }
