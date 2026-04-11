@@ -101,7 +101,7 @@ export default function History() {
                     />
                   </td>
                   <td className="p-4 align-middle font-medium flex items-center gap-3 min-w-[150px]">
-                    <span className="text-muted-foreground w-4 text-right pr-2">{index + 1}</span>
+                    <span className="text-muted-foreground w-4 text-right pr-2">{index + 100}</span>
                     
                     {/* IMPLEMENTASI LOGO LOKAL */}
                     <div className="h-7 w-7 rounded-full bg-secondary/50 flex items-center justify-center overflow-hidden border">
