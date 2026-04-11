@@ -1,4 +1,4 @@
-# AI Hedge Fund - Retail Terminal
+# Wanda AI Hedge Fund - Retail Terminal
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Next.js](https://img.shields.io/badge/Next.js-16.2-black)
