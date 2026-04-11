@@ -1,7 +1,14 @@
-"use client";
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 // Struktur data diperbarui dengan format angka terpisah dan tambahan logoPath
 interface StockData {
@@ -119,6 +126,13 @@ const INITIAL_STOCKS: StockData[] = [
 export default function History() {
   const [stocks, setStocks] = useState<StockData[]>(INITIAL_STOCKS);
   const [selectedStocks, setSelectedStocks] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const totalPages = Math.ceil(stocks.length / itemsPerPage);
+  const paginatedStocks = stocks.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   // Simulasi Market Live Data (berubah setiap 1.5 detik)
   useEffect(() => {
@@ -172,7 +186,7 @@ export default function History() {
               </tr>
             </thead>
             <tbody className="[&_tr:last-child]:border-0">
-              {stocks.map((stock, index) => (
+              {paginatedStocks.map((stock, index) => (
                 <tr
                   key={stock.symbol}
                   className="border-b transition-colors hover:bg-muted/50"
@@ -186,7 +200,7 @@ export default function History() {
                     />
                   </td>
                   <td className="p-4 align-middle font-medium flex items-center gap-3 min-w-[150px]">
-                    <span className="text-muted-foreground w-4 text-right pr-2">{index + 100}</span>
+                    <span className="text-muted-foreground w-4 text-right pr-2">{(currentPage - 1) * itemsPerPage + index + 1}</span>
 
                     {/* IMPLEMENTASI LOGO LOKAL */}
                     <div className="h-7 w-7 rounded-full bg-secondary/50 flex items-center justify-center overflow-hidden border">
@@ -229,6 +243,35 @@ export default function History() {
               ))}
             </tbody>
           </table>
+        </div>
+        <div className="flex justify-center mt-4">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                  className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                />
+              </PaginationItem>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <PaginationItem key={page}>
+                  <PaginationLink
+                    onClick={() => setCurrentPage(page)}
+                    isActive={currentPage === page}
+                    className="cursor-pointer"
+                  >
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                  className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       </CardContent>
     </Card>
