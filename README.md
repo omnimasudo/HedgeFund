@@ -8,7 +8,7 @@
 
 [![Follow on X](https://img.shields.io/badge/Follow%20on%20X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/wandaihedgefund)
 
-CA: [TBD]
+CA: 9kzf9FN8dFJQ86p7ZcRQoYVGY6e2BmwRjQmZc25Lpump
 
 This is a proof of concept for an AI-powered hedge fund.  The goal of this project is to explore the use of AI to make trading decisions.  This project is for **educational** purposes only and is not intended for real trading or investment.
 
